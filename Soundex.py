@@ -11,6 +11,17 @@ def get_soundex_code(c):
     return mapping.get(c, '0')  # Default to '0' for non-mapped characters
 
 
+def process_character(soundex, prev_code, char):
+    code = get_soundex_code(char)
+    if code != '0' and code != prev_code:
+        soundex += code
+    return soundex, code
+
+
+def pad_soundex(soundex):
+    return soundex.ljust(4, '0')
+
+
 def generate_soundex(name):
     if not name:
         return ""
@@ -20,14 +31,8 @@ def generate_soundex(name):
     prev_code = get_soundex_code(soundex)
 
     for char in name[1:]:
-        code = get_soundex_code(char)
-        if code != '0' and code != prev_code:
-            soundex += code
-            prev_code = code
         if len(soundex) == 4:
             break
+        soundex, prev_code = process_character(soundex, prev_code, char)
 
-    # Pad with zeros if necessary
-    soundex = soundex.ljust(4, '0')
-
-    return soundex
+    return pad_soundex(soundex)
