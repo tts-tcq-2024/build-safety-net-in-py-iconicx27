@@ -6,6 +6,7 @@ soundex_dict = {
         'M': '5', 'N': '5',
         'R': '6'
 }
+
 def get_soundex_code(char):
     return soundex_dict.get(char.upper(), '')
 
@@ -31,9 +32,11 @@ def generate_soundex(name):
         return ""
 
     soundex, prev_code = initialize_soundex(name)
+    soundex = process_name(name, soundex, prev_code)
+    return finalize_soundex(soundex)
 
+def process_name(name, soundex, prev_code):
     for char in name[1:]:
         if should_process_char(soundex, char):
             soundex, prev_code = update_soundex(soundex, prev_code, char)
-
-    return finalize_soundex(soundex)
+    return soundex
