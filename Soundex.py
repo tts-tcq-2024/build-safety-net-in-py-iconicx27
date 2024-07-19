@@ -1,38 +1,39 @@
-def get_soundex_code(c):
-    c = c.upper()
-    mapping = {
+soundex_dict = {
         'B': '1', 'F': '1', 'P': '1', 'V': '1',
         'C': '2', 'G': '2', 'J': '2', 'K': '2', 'Q': '2', 'S': '2', 'X': '2', 'Z': '2',
         'D': '3', 'T': '3',
         'L': '4',
         'M': '5', 'N': '5',
         'R': '6'
-    }
-    return mapping.get(c, '0')  # Default to '0' for non-mapped characters
+}
+def get_soundex_code(char):
+    return soundex_dict.get(char.upper(), '')
 
+def initialize_soundex(name):
+    first_letter = name[0].upper()
+    first_code = get_soundex_code(first_letter)
+    return first_letter, first_code
 
-def process_character(soundex, prev_code, char):
-    code = get_soundex_code(char)
-    if code != '0' and code != prev_code:
-        soundex += code
-    return soundex, code
+def should_process_char(soundex, char):
+    return len(soundex) < 4 and char.isalpha()
 
+def update_soundex(soundex, prev_code, char):
+    current_code = get_soundex_code(char)
+    if current_code != prev_code and current_code != '':
+        soundex += current_code
+    return soundex, current_code
 
-def pad_soundex(soundex):
+def finalize_soundex(soundex):
     return soundex.ljust(4, '0')
-
 
 def generate_soundex(name):
     if not name:
         return ""
 
-    # Start with the first letter (capitalized)
-    soundex = name[0].upper()
-    prev_code = get_soundex_code(soundex)
+    soundex, prev_code = initialize_soundex(name)
 
     for char in name[1:]:
-        if len(soundex) == 4:
-            break
-        soundex, prev_code = process_character(soundex, prev_code, char)
+        if should_process_char(soundex, char):
+            soundex, prev_code = update_soundex(soundex, prev_code, char)
 
-    return pad_soundex(soundex)
+    return finalize_soundex(soundex)
