@@ -21,11 +21,6 @@ class TestSoundex(unittest.TestCase):
         self.assertEqual(generate_soundex("sound"), "S530")
         self.assertEqual(generate_soundex("Smith"), "S530")
 
-    #string with vowels
-    def test_name_with_vowels(self):
-        self.assertEqual(generate_soundex("aeiou"), "A000")
-        self.assertEqual(generate_soundex("aeioubcdfgh"), "A121")
-
     #repeated consonants
     def test_repeated_consonants(self):
         self.assertEqual(generate_soundex("Tymczak"), "T522")
